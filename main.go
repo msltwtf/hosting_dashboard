@@ -28,7 +28,7 @@ type ServerData struct {
 
 type NamespaceData struct {
 	Namespace string
-	Servers []ServerData
+	Servers   []*hcloud.Server
 }
 
 type toolConfig struct {
@@ -64,23 +64,12 @@ func getFromAll(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		var td []ServerData
-		for _, s := range servers {
-			sd := ServerData{
-				Name:      s.Name,
-				PublicNet: s.PublicNet,
-				Labels:    s.Labels,
-			}
-			td = append(td, sd)
-		}
 		data := NamespaceData{
 			Namespace: namespace,
-			Servers: td,
+			Servers:   servers,
 		}
 		AllData = append(AllData, data)
 	}
-
-
 
 	t, err := template.ParseFS(content, "templates/servers.gohtml")
 	if err != nil {

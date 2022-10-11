@@ -4,11 +4,16 @@
   </head>
   <body class="bg-dark">
     {{ range .AllData }}
-    <h1 class="bg-dark text-light">{{ .Namespace }}</h1>
-    <table class="table table-dark table-striped table-hover table-bordered caption-top">
+    {{ if .Servers }}
+    <h3><span class="badge text-bg-danger">{{ .Namespace }}</span></h3>
+    <table class="table table-dark table-bordered caption-top">
     <tr>
       <th scope="col">Name</th>
+      <th>Type</th>
       <th>IP</th>
+      <th>OS</th>
+      <th>DC</th>
+      {{/* <th>Volumes</th> */}}
       <th>ordered_by</th>
       <th>created_by</th>
       <th>Ticket No</th>
@@ -17,14 +22,19 @@
       {{ range .Servers }}
         <tr>
           <td>{{ .Name }}</td>
+          <td>{{ .ServerType.Name }}</td>
           <td>{{ .PublicNet.IPv4.IP }}</td>
-          <td>{{ .Labels.ordered_by }}</td>
-          <td>{{ .Labels.created_by }}</td>
-          <td>{{ .Labels.ticket }}</td>
-          <td>{{ .Labels.needed_until }}</td>
+          <td>{{ .Image.Name }}</td>
+          <td>{{ .Datacenter.Location.Name }}</td>
+          <!--<td>TO IMPLEMENT</td>-->
+          {{ if .Labels.ordered_by }}<td>{{ .Labels.ordered_by }}{{ else }}<td class="text-bg-danger">MISSING{{ end }}</td>
+          {{ if .Labels.created_by }}<td>{{ .Labels.created_by }}{{ else }}<td class="text-bg-danger">MISSING{{ end }}</td>
+          {{ if .Labels.ticket }}<td>{{ .Labels.ticket }}{{ else }}<td class="text-bg-danger">MISSING{{ end }}</td>
+          {{ if .Labels.needed_until }}<td>{{ .Labels.needed_until }}{{ else }}<td class="text-bg-danger">MISSING{{ end }}</td>
         </tr>
       {{ end }}
     {{ end }}
     </table>
+    {{end}}
   <body>
 </html>

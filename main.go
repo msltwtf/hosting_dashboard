@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -32,7 +33,11 @@ type NamespaceData struct {
 }
 
 type toolConfig struct {
-	Namespaces map[string]string
+	Namespaces map[string]string `yaml:"namespaces" json:"namespaces"`
+	Webserver  struct {
+		Port int    `yaml:"port" addr:"port"`
+		Addr string `yaml:"addr" json:"addr"`
+	} `yaml:"webserver" json:"webserver"`
 }
 
 var config toolConfig
@@ -97,5 +102,5 @@ func main() {
 	log.Println("Loaded config")
 
 	http.HandleFunc("/", getFromAll)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(fmt.Sprintf("%s:%d", config.Webserver.Addr, config.Webserver.Port), nil)
 }

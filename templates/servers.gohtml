@@ -5,7 +5,7 @@
   <body class="bg-dark">
     {{ range .AllData }}
     {{ if .Servers }}
-    <h3><span class="badge text-bg-danger">{{ .Namespace }}</span></h3>
+    <h3><span class="badge text-bg-danger">env :: {{ .Namespace }}</span></h3>
     <table class="table table-dark table-bordered caption-top">
     <tr>
       <th scope="col">Name</th>
@@ -30,7 +30,16 @@
           {{ if .Labels.ordered_by }}<td>{{ .Labels.ordered_by }}{{ else }}<td class="text-bg-danger">MISSING{{ end }}</td>
           {{ if .Labels.created_by }}<td>{{ .Labels.created_by }}{{ else }}<td class="text-bg-danger">MISSING{{ end }}</td>
           {{ if .Labels.ticket }}<td>{{ .Labels.ticket }}{{ else }}<td class="text-bg-danger">MISSING{{ end }}</td>
-          {{ if .Labels.needed_until }}<td>{{ .Labels.needed_until }}{{ else }}<td class="text-bg-danger">MISSING{{ end }}</td>
+          {{ if .Labels.needed_until }}
+            {{ if .Labels.needed_until eq "indef" }}
+              <td class="table-bg-success">permenent  
+            {{ else }}
+              <td>{{ .Labels.needed_until }}
+            {{ end }}
+          {{ else }}
+              <td class="text-bg-danger">MISSING
+          {{ end }}
+          </td>
         </tr>
       {{ end }}
     {{ end }}
